@@ -457,91 +457,140 @@ body {
     }
 }
 
-@media (max-width: 600px) {
-    .love-message {
-        font-size: 38px;
-        letter-spacing: 2px;
-    }
-    
-    .love-text {
-        font-size: 24px;
-        letter-spacing: 1px;
-    }
-    
-    .playlist-player {
-        padding: 20px;
-        max-width: 90%;
-    }
-    
-    .gift-wrapper {
-        width: 240px;
-        height: 280px;
-    }
-    
-    .gift-box {
-        width: 240px;
-        height: 170px;
-    }
-    
-    .lid {
-        width: 260px;
-    }
-    
-    .instruction {
-        top: calc(50% - 220px);
-        font-size: 22px;
-        letter-spacing: 2px;
-    }
-    
-    .message-reveal {
-        max-width: 90%;
-        padding: 15px;
-    }
-    
-    .current-song {
-        font-size: 24px;
-    }
-    
-    .current-artist {
-        font-size: 14px;
-    }
+@media (max-width: 768px) {
+
+body {
+    align-items: flex-start;
+    padding-top: 40px;
 }
 
+.container {
+    height: auto;
+    min-height: 100vh;
+    padding-bottom: 40px;
+}
+
+.gift-stage {
+    top: 35%;
+}
+
+.instruction {
+    top: calc(35% - 160px);
+    font-size: 20px;
+    letter-spacing: 2px;
+    text-align: center;
+    width: 100%;
+    padding: 0 10px;
+    white-space: normal;
+}
+
+.gift-wrapper {
+    width: 220px;
+    height: 250px;
+}
+
+.gift-box {
+    width: 220px;
+    height: 160px;
+}
+
+.lid {
+    width: 240px;
+    height: 60px;
+    top: -60px;
+}
+
+.bow {
+    width: 80px;
+    height: 40px;
+    top: -30px;
+}
+
+.message-reveal {
+    position: relative;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin-top: 30px;
+    max-width: 95%;
+    padding: 15px;
+}
+
+.playlist-player {
+    padding: 20px;
+    border-radius: 20px;
+    max-width: 100%;
+}
+
+.current-song {
+    font-size: 20px;
+}
+
+.current-artist {
+    font-size: 13px;
+}
+
+.love-message {
+    font-size: 32px;
+    letter-spacing: 2px;
+}
+
+.love-text {
+    font-size: 18px;
+    letter-spacing: 1px;
+    margin-bottom: 40px;
+}
+
+.playlist-info {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+}
+
+.time-display {
+    font-size: 11px;
+}
+}
+
+/* EXTRA SMALL PHONES */
+
 @media (max-width: 400px) {
-    .gift-wrapper {
-        width: 200px;
-        height: 240px;
-    }
-    
-    .gift-box {
-        width: 200px;
-        height: 140px;
-    }
-    
-    .lid {
-        width: 220px;
-        height: 60px;
-        top: -60px;
-    }
-    
-    .bow {
-        width: 80px;
-        height: 40px;
-        top: -30px;
-    }
-    
-    .instruction {
-        top: calc(50% - 190px);
-        font-size: 20px;
-    }
-    
-    .love-message {
-        font-size: 32px;
-    }
-    
-    .love-text {
-        font-size: 20px;
-    }
+
+.gift-wrapper {
+    width: 180px;
+    height: 220px;
+}
+
+.gift-box {
+    width: 180px;
+    height: 130px;
+}
+
+.lid {
+    width: 200px;
+    height: 55px;
+    top: -55px;
+}
+
+.instruction {
+    font-size: 18px;
+}
+
+.playlist-player {
+    padding: 15px;
+}
+
+.current-song {
+    font-size: 18px;
+}
+
+.love-message {
+    font-size: 26px;
+}
+
+.love-text {
+    font-size: 16px;
+}
 }
 </style>
 </head>
