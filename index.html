@@ -608,154 +608,123 @@ body {
 </div>
 
 <script>
-const playlist = [
-    {
-        title: "Innum Konja Neram",
-        artist: "A.R. Rahman",
-        file: "songs/Innum-Konjam-Neram.mp3"
-    },
-    {
-        title: "Marakavillaye",
-        artist: "Anirudh",
-        file: "songs/Marakkavillayae-MassTamilan.org.mp3"
-    }
-];
-
-let currentTrackIndex = 0;
-let opened = false;
-let progressInterval;
-const SONG_DURATION = 20; 
-
-const giftWrapper = document.getElementById('giftWrapper');
-const giftStage = document.querySelector('.gift-stage');
-const instruction = document.getElementById('instruction');
-const messageReveal = document.getElementById('messageReveal');
-const currentSongEl = document.getElementById('currentSong');
-const currentArtistEl = document.getElementById('currentArtist');
-const trackNumberEl = document.getElementById('trackNumber');
-const totalTracksEl = document.getElementById('totalTracks');
-const progressBar = document.getElementById('progressBar');
-const currentTimeEl = document.getElementById('currentTime');
-const totalTimeEl = document.getElementById('totalTime');
-const audioPlayer = document.getElementById('audioPlayer');
-
-function formatTime(seconds) {
-    const minutes = Math.floor(seconds / 60);
-    const secs = Math.floor(seconds % 60);
-    return `${minutes}:${secs.toString().padStart(2,'0')}`;
-}
-
-totalTimeEl.textContent = formatTime(SONG_DURATION);
-
-function createFloatingHearts() {
-    const heartsBg = document.getElementById('heartsBg');
-    const hearts = ['💖', '💗', '💓', '💕', '💝', '❤️', '🌸'];
-    
-    setInterval(() => {
-        const heart = document.createElement('div');
-        heart.className = 'heart-particle';
-        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-        heart.style.left = Math.random() * 100 + '%';
-        heart.style.animationDelay = Math.random() * 2 + 's';
-        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
-        heartsBg.appendChild(heart);
-        
-        setTimeout(() => heart.remove(), 8000);
-    }, 300);
-}
-
-createFloatingHearts();
-
-function createSparkles(x, y) {
-    for (let i = 0; i < 10; i++) {
-        const sparkle = document.createElement('div');
-        sparkle.className = 'sparkle';
-        sparkle.style.left = x + 'px';
-        sparkle.style.top = y + 'px';
-        sparkle.style.animationDelay = (i * 0.1) + 's';
-        document.body.appendChild(sparkle);
-        
-        setTimeout(() => sparkle.remove(), 1500);
-    }
-}
-
-function updateSongDisplay() {
-    const track = playlist[currentTrackIndex];
-
-    currentSongEl.textContent = track.title;
-    currentArtistEl.textContent = track.artist;
-    trackNumberEl.textContent = currentTrackIndex + 1;
-
-    audioPlayer.src = track.file;
-    audioPlayer.play();
-}
-
-function startProgress() {
-    let elapsed = 0;
-    
-    clearInterval(progressInterval);
-    progressBar.style.width = '0%';
-    
-    progressInterval = setInterval(() => {
-        elapsed += 0.1;
-        const percentage = (elapsed / SONG_DURATION) * 100;
-        progressBar.style.width = percentage + '%';
-        
-        const minutes = Math.floor(elapsed / 60);
-        const seconds = Math.floor(elapsed % 60);
-        currentTimeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-        
-        if (elapsed >= SONG_DURATION) {
-            nextTrack();
+    const playlist = [
+        {
+            title: "Innum Konja Neram",
+            artist: "A.R. Rahman",
+            file: "songs/Innum-Konjam-Neram.mp3",
+            start: 278  
+        },
+        {
+            title: "Marakavillaye",
+            artist: "Anirudh",
+            file: "songs/Marakkavillayae-MassTamilan.org.mp3",
+            start: 120  
         }
-    }, 100);
-}
-
-audioPlayer.addEventListener('loadedmetadata', () => {
-    totalTimeEl.textContent = formatTime(audioPlayer.duration);
-});
-
-audioPlayer.addEventListener('timeupdate', () => {
-    const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-    progressBar.style.width = percentage + '%';
-    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
-});
-
-audioPlayer.addEventListener('ended', () => {
-    nextTrack();
-});
-
-function nextTrack() {
-    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
-    updateSongDisplay();
-}
-
-giftWrapper.addEventListener('click', function(e) {
-    if (opened) return;
-    opened = true;
+    ];
     
-    const rect = giftWrapper.getBoundingClientRect();
-    createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    let currentTrackIndex = 0;
+    let opened = false;
     
-    giftWrapper.classList.add('opened');
-    instruction.style.opacity = '0';
+    const CLIP_DURATION = 30; 
     
-    setTimeout(() => {
-        instruction.style.display = 'none';
-        giftStage.classList.add('hidden');
-        
+    const giftWrapper = document.getElementById('giftWrapper');
+    const giftStage = document.querySelector('.gift-stage');
+    const instruction = document.getElementById('instruction');
+    const messageReveal = document.getElementById('messageReveal');
+    const currentSongEl = document.getElementById('currentSong');
+    const currentArtistEl = document.getElementById('currentArtist');
+    const trackNumberEl = document.getElementById('trackNumber');
+    const totalTracksEl = document.getElementById('totalTracks');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const totalTimeEl = document.getElementById('totalTime');
+    const audioPlayer = document.getElementById('audioPlayer');
+    
+    totalTracksEl.textContent = playlist.length;
+    totalTimeEl.textContent = formatTime(CLIP_DURATION);
+    currentTimeEl.textContent = "0:00";
+    
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${minutes}:${secs.toString().padStart(2,'0')}`;
+    }
+    
+    
+    function updateSongDisplay() {
+    
+        const track = playlist[currentTrackIndex];
+        const clipStart = track.start || 0;
+        const clipEnd = clipStart + CLIP_DURATION;
+    
+        currentSongEl.textContent = track.title;
+        currentArtistEl.textContent = track.artist;
+        trackNumberEl.textContent = currentTrackIndex + 1;
+    
+        progressBar.style.width = "0%";
+        currentTimeEl.textContent = "0:00";
+    
+        audioPlayer.src = track.file;
+    
+        audioPlayer.addEventListener("loadedmetadata", () => {
+    
+            if (audioPlayer.duration > clipStart) {
+                audioPlayer.currentTime = clipStart;
+            } else {
+                audioPlayer.currentTime = 0;
+            }
+    
+            audioPlayer.play();
+    
+        }, { once: true });
+    
+        audioPlayer.ontimeupdate = () => {
+    
+            if (audioPlayer.currentTime >= clipEnd) {
+                audioPlayer.pause();
+                nextTrack();
+                return;
+            }
+    
+            const elapsed = audioPlayer.currentTime - clipStart;
+    
+            if (elapsed >= 0) {
+                const percentage = (elapsed / CLIP_DURATION) * 100;
+                progressBar.style.width = percentage + "%";
+                currentTimeEl.textContent = formatTime(elapsed);
+            }
+        };
+    }
+    
+    
+    function nextTrack() {
+        currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+        updateSongDisplay();
+    }
+    
+    
+    giftWrapper.addEventListener("click", function() {
+    
+        if (opened) return;
+        opened = true;
+    
+        giftWrapper.classList.add("opened");
+        instruction.style.opacity = "0";
+    
         setTimeout(() => {
-            giftStage.style.display = 'none';
-            messageReveal.classList.add('active');
-            updateSongDisplay();
-            startProgress();
-        }, 800);
-        
-    }, 1000);
-});
-
-currentTimeEl.textContent = '0:00';
-</script>
+            instruction.style.display = "none";
+            giftStage.classList.add("hidden");
+    
+            setTimeout(() => {
+                giftStage.style.display = "none";
+                messageReveal.classList.add("active");
+                updateSongDisplay();
+            }, 800);
+    
+        }, 1000);
+    });
+</script>    
 
 </body>
 </html>
