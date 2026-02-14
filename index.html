@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root {
+    --primary: #ff1744;
+    --secondary: #ff6090;
+    --accent: #ffd700;
+    --dark: #1a0511;
+    --light: #fff5f7;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background: radial-gradient(ellipse at top, #ff1744, #c2185b 50%, #880e4f);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.hearts-bg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.heart-particle {
+    position: absolute;
+    bottom: -50px;
+    font-size: 20px;
+    opacity: 0;
+    animation: float-up 8s infinite ease-in;
+}
+
+@keyframes float-up {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 0.8;
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-100vh) rotate(360deg);
+    }
+}
+
+.container {
+    text-align: center;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    height: 100vh;
+}
+
+.gift-stage {
+    perspective: 1200px;
+    margin: auto;
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.gift-stage.hidden {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.8);
+    pointer-events: none;
+}
+
+.gift-wrapper {
+    position: relative;
+    width: 280px;
+    height: 300px;
+    margin: 0 auto;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: transform 0.6s ease;
+}
+
+.gift-wrapper:hover:not(.opened) {
+    transform: rotateY(10deg) rotateX(5deg) scale(1.05);
+}
+
+.gift-box {
+    width: 280px;
+    height: 200px;
+    background: linear-gradient(145deg, #ff4d6d, #c92a4a);
+    border-radius: 20px;
+    position: relative;
+    box-shadow: 
+        0 30px 60px rgba(0,0,0,0.4),
+        inset 0 2px 20px rgba(255,255,255,0.2),
+        inset 0 -2px 20px rgba(0,0,0,0.2);
+    transform: translateZ(20px);
+}
+
+.gift-box::before {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 15px;
+}
+
+.lid {
+    width: 300px;
+    height: 70px;
+    background: linear-gradient(145deg, #ff2e63, #d81b60);
+    border-radius: 25px 25px 15px 15px;
+    position: absolute;
+    top: -70px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(30px);
+    box-shadow: 
+        0 10px 30px rgba(0,0,0,0.3),
+        inset 0 2px 15px rgba(255,255,255,0.3);
+    transition: all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: bottom center;
+}
+
+.opened .lid {
+    transform: translateX(-50%) translateZ(30px) translateY(-150px) rotateX(-120deg);
+    box-shadow: 0 40px 60px rgba(0,0,0,0.5);
+}
+
+.ribbon-v {
+    position: absolute;
+    width: 45px;
+    height: 100%;
+    background: linear-gradient(90deg, #fff, #ffe0e6, #fff);
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+.ribbon-h {
+    position: absolute;
+    height: 45px;
+    width: 100%;
+    background: linear-gradient(180deg, #fff, #ffe0e6, #fff);
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 15px rgba(255,255,255,0.5);
+}
+
+.bow {
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%) translateZ(40px);
+    width: 100px;
+    height: 50px;
+    filter: drop-shadow(0 8px 15px rgba(0,0,0,0.3));
+}
+
+.bow-loop {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #fff, #ffd6e0);
+    border-radius: 50% 50% 0 50%;
+    box-shadow: inset -3px -3px 10px rgba(255,0,80,0.3);
+}
+
+.bow-loop:first-child {
+    left: 0;
+    transform: rotate(-45deg);
+}
+
+.bow-loop:last-child {
+    right: 0;
+    transform: rotate(45deg);
+}
+
+.bow-center {
+    position: absolute;
+    width: 35px;
+    height: 35px;
+    background: radial-gradient(circle, #fff, #ffb3c6);
+    border-radius: 50%;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) translateZ(10px);
+    box-shadow: 0 5px 15px rgba(255,0,80,0.4);
+}
+
+.shadow {
+    width: 240px;
+    height: 25px;
+    background: radial-gradient(ellipse, rgba(0,0,0,0.4), transparent);
+    border-radius: 50%;
+    margin: 30px auto 0;
+    animation: pulse-shadow 2s infinite ease-in-out;
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@keyframes pulse-shadow {
+    0%, 100% { transform: scale(1); opacity: 0.4; }
+    50% { transform: scale(1.1); opacity: 0.6; }
+}
+
+.instruction {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--light);
+    font-weight: 400;
+    letter-spacing: 3px;
+    text-shadow: 
+        0 3px 15px rgba(0,0,0,0.6),
+        0 1px 3px rgba(0,0,0,0.4);
+    animation: float 3s infinite ease-in-out;
+    position: absolute;
+    top: calc(50% - 250px);
+    left: 50%;
+    transform: translateX(-50%);
+    transition: opacity 0.5s ease;
+    white-space: nowrap;
+}
+
+@keyframes float {
+    0%, 100% { 
+        transform: translateX(-50%) translateY(0px); 
+    }
+    50% { 
+        transform: translateX(-50%) translateY(-10px); 
+    }
+}
+
+.message-reveal {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1s ease;
+    text-align: center;
+    max-width: 600px;
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.message-reveal.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.love-message {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 68px;
+    color: #ffffff;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-shadow: 
+        0 6px 30px rgba(0,0,0,0.9),
+        0 3px 10px rgba(0,0,0,0.7),
+        0 0 60px rgba(255,255,255,0.3);
+    animation: fadeInScale 1s ease forwards;
+    letter-spacing: 3px;
+    line-height: 1.2;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.love-text {
+    font-size: 40px;
+    color: #ffffff;
+    line-height: 1.6;
+    margin-bottom: 60px;
+    text-shadow: 
+        0 4px 20px rgba(0,0,0,0.9),
+        0 2px 8px rgba(0,0,0,0.6),
+        0 0 40px rgba(255,255,255,0.2);
+    opacity: 0;
+    animation: fadeInUp 1s ease 0.5s forwards;
+    font-weight: 500;
+    letter-spacing: 2px;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.playlist-player {
+    background: rgba(26, 5, 17, 0.8);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 35px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.1);
+    opacity: 0;
+    animation: fadeInUp 1s ease 1s forwards;
+    max-width: 450px;
+    margin: 0 auto;
+}
+
+.now-playing {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.now-playing-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--secondary);
+    margin-bottom: 10px;
+}
+
+.current-song {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    color: var(--light);
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.current-artist {
+    font-size: 16px;
+    color: rgba(255,255,255,0.6);
+}
+
+.progress-container {
+    position: relative;
+    height: 6px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    margin: 25px 0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--primary));
+    border-radius: 10px;
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.time-display {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+}
+
+.playlist-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.playlist-count {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+}
+
+.playlist-count .track-number {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+.auto-play-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+}
+
+.pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--primary);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+}
+
+/* Sparkles */
+.sparkle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: sparkle 1.5s ease-out forwards;
+}
+
+@keyframes sparkle {
+    0% {
+        opacity: 1;
+        transform: scale(0) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1) rotate(360deg) translate(50px, 50px);
+    }
+}
+
+@media (max-width: 600px) {
+    .love-message {
+        font-size: 38px;
+        letter-spacing: 2px;
+    }
+    
+    .love-text {
+        font-size: 24px;
+        letter-spacing: 1px;
+    }
+    
+    .playlist-player {
+        padding: 20px;
+        max-width: 90%;
+    }
+    
+    .gift-wrapper {
+        width: 240px;
+        height: 280px;
+    }
+    
+    .gift-box {
+        width: 240px;
+        height: 170px;
+    }
+    
+    .lid {
+        width: 260px;
+    }
+    
+    .instruction {
+        top: calc(50% - 220px);
+        font-size: 22px;
+        letter-spacing: 2px;
+    }
+    
+    .message-reveal {
+        max-width: 90%;
+        padding: 15px;
+    }
+    
+    .current-song {
+        font-size: 24px;
+    }
+    
+    .current-artist {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 400px) {
+    .gift-wrapper {
+        width: 200px;
+        height: 240px;
+    }
+    
+    .gift-box {
+        width: 200px;
+        height: 140px;
+    }
+    
+    .lid {
+        width: 220px;
+        height: 60px;
+        top: -60px;
+    }
+    
+    .bow {
+        width: 80px;
+        height: 40px;
+        top: -30px;
+    }
+    
+    .instruction {
+        top: calc(50% - 190px);
+        font-size: 20px;
+    }
+    
+    .love-message {
+        font-size: 32px;
+    }
+    
+    .love-text {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="hearts-bg" id="heartsBg"></div>
+
+<div class="container">
+    <div class="gift-stage">
+        <div class="gift-wrapper" id="giftWrapper">
+            <div class="lid"></div>
+            
+            <div class="bow">
+                <div class="bow-loop"></div>
+                <div class="bow-loop"></div>
+                <div class="bow-center"></div>
+            </div>
+            
+            <div class="gift-box">
+                <div class="ribbon-v"></div>
+                <div class="ribbon-h"></div>
+            </div>
+            
+            <div class="shadow"></div>
+        </div>
+    </div>
+    
+    <div class="instruction" id="instruction">Click the Gift 🎁</div>
+    
+    <div class="message-reveal" id="messageReveal">
+        <div class="love-message">Happy Valentine's Day 💖
+        </div>
+        <div class="love-text">
+            Loving you is a daily routine for me
+        </div>
+        
+        <div class="playlist-player">
+            <div class="now-playing">
+                <div class="now-playing-label">Now Playing</div>
+                <div class="current-song" id="currentSong">Innum Konja Neram</div>
+                <div class="current-artist" id="currentArtist">A.R. Rahman</div>
+            </div>
+            <audio id="audioPlayer"></audio>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            
+            <div class="time-display">
+                <span id="currentTime">0:00</span>
+                <span id="totalTime">0:00</span>
+            </div>
+            
+            <div class="playlist-info">
+                <div class="playlist-count">
+                    Track <span class="track-number" id="trackNumber">1</span> of <span id="totalTracks">2</span>
+                </div>
+                <div class="auto-play-indicator">
+                    <div class="pulse-dot"></div>
+                    Auto-playing
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const playlist = [
+    {
+        title: "Innum Konja Neram",
+        artist: "A.R. Rahman",
+        file: "songs/Innum-Konjam-Neram.mp3"
+    },
+    {
+        title: "Marakavillaye",
+        artist: "Anirudh",
+        file: "songs/Marakkavillayae-MassTamilan.org.mp3"
+    }
+];
+
+let currentTrackIndex = 0;
+let opened = false;
+let progressInterval;
+const SONG_DURATION = 20; 
+
+const giftWrapper = document.getElementById('giftWrapper');
+const giftStage = document.querySelector('.gift-stage');
+const instruction = document.getElementById('instruction');
+const messageReveal = document.getElementById('messageReveal');
+const currentSongEl = document.getElementById('currentSong');
+const currentArtistEl = document.getElementById('currentArtist');
+const trackNumberEl = document.getElementById('trackNumber');
+const totalTracksEl = document.getElementById('totalTracks');
+const progressBar = document.getElementById('progressBar');
+const currentTimeEl = document.getElementById('currentTime');
+const totalTimeEl = document.getElementById('totalTime');
+const audioPlayer = document.getElementById('audioPlayer');
+
+function formatTime(seconds) {
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${minutes}:${secs.toString().padStart(2,'0')}`;
+}
+
+totalTimeEl.textContent = formatTime(SONG_DURATION);
+
+function createFloatingHearts() {
+    const heartsBg = document.getElementById('heartsBg');
+    const hearts = ['💖', '💗', '💓', '💕', '💝', '❤️', '🌸'];
+    
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.className = 'heart-particle';
+        heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+        heart.style.left = Math.random() * 100 + '%';
+        heart.style.animationDelay = Math.random() * 2 + 's';
+        heart.style.fontSize = (Math.random() * 15 + 15) + 'px';
+        heartsBg.appendChild(heart);
+        
+        setTimeout(() => heart.remove(), 8000);
+    }, 300);
+}
+
+createFloatingHearts();
+
+function createSparkles(x, y) {
+    for (let i = 0; i < 10; i++) {
+        const sparkle = document.createElement('div');
+        sparkle.className = 'sparkle';
+        sparkle.style.left = x + 'px';
+        sparkle.style.top = y + 'px';
+        sparkle.style.animationDelay = (i * 0.1) + 's';
+        document.body.appendChild(sparkle);
+        
+        setTimeout(() => sparkle.remove(), 1500);
+    }
+}
+
+function updateSongDisplay() {
+    const track = playlist[currentTrackIndex];
+
+    currentSongEl.textContent = track.title;
+    currentArtistEl.textContent = track.artist;
+    trackNumberEl.textContent = currentTrackIndex + 1;
+
+    audioPlayer.src = track.file;
+    audioPlayer.play();
+}
+
+function startProgress() {
+    let elapsed = 0;
+    
+    clearInterval(progressInterval);
+    progressBar.style.width = '0%';
+    
+    progressInterval = setInterval(() => {
+        elapsed += 0.1;
+        const percentage = (elapsed / SONG_DURATION) * 100;
+        progressBar.style.width = percentage + '%';
+        
+        const minutes = Math.floor(elapsed / 60);
+        const seconds = Math.floor(elapsed % 60);
+        currentTimeEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        
+        if (elapsed >= SONG_DURATION) {
+            nextTrack();
+        }
+    }, 100);
+}
+
+audioPlayer.addEventListener('loadedmetadata', () => {
+    totalTimeEl.textContent = formatTime(audioPlayer.duration);
+});
+
+audioPlayer.addEventListener('timeupdate', () => {
+    const percentage = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+    progressBar.style.width = percentage + '%';
+    currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+});
+
+audioPlayer.addEventListener('ended', () => {
+    nextTrack();
+});
+
+function nextTrack() {
+    currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+    updateSongDisplay();
+}
+
+giftWrapper.addEventListener('click', function(e) {
+    if (opened) return;
+    opened = true;
+    
+    const rect = giftWrapper.getBoundingClientRect();
+    createSparkles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    
+    giftWrapper.classList.add('opened');
+    instruction.style.opacity = '0';
+    
+    setTimeout(() => {
+        instruction.style.display = 'none';
+        giftStage.classList.add('hidden');
+        
+        setTimeout(() => {
+            giftStage.style.display = 'none';
+            messageReveal.classList.add('active');
+            updateSongDisplay();
+            startProgress();
+        }, 800);
+        
+    }, 1000);
+});
+
+currentTimeEl.textContent = '0:00';
+</script>
+
+</body>
+</html>
