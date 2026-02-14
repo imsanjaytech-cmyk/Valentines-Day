@@ -168,6 +168,31 @@ body {
     transform: translateY(-50%);
     box-shadow: 0 0 15px rgba(255,255,255,0.5);
 }
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 20px;
+}
+
+.controls button {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 22px;
+    padding: 12px 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.controls button:hover {
+    background: var(--primary);
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(255,23,68,0.6);
+}
 
 .bow {
     position: absolute;
@@ -642,7 +667,11 @@ body {
                 <span id="currentTime">0:00</span>
                 <span id="totalTime">0:00</span>
             </div>
-            
+            <div class="controls">
+                <button id="prevBtn">⏮</button>
+                <button id="playPauseBtn">⏸</button>
+                <button id="nextBtn">⏭</button>
+            </div>            
             <div class="playlist-info">
                 <div class="playlist-count">
                     Track <span class="track-number" id="trackNumber">1</span> of <span id="totalTracks">2</span>
@@ -669,7 +698,13 @@ body {
             artist: "Anirudh",
             file: "songs/Marakkavillayae-MassTamilan.org.mp3",
             start: 120  
-        }
+        },
+        // {
+        //     title: "Aathi",
+        //     artist: "Anirudh",
+        //     file: "songs/Aathi.mp3",
+        //     start: 120  
+        // }
     ];
     
     let currentTrackIndex = 0;
@@ -689,7 +724,10 @@ body {
     const currentTimeEl = document.getElementById('currentTime');
     const totalTimeEl = document.getElementById('totalTime');
     const audioPlayer = document.getElementById('audioPlayer');
-    
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const playPauseBtn = document.getElementById("playPauseBtn");
+
     totalTracksEl.textContent = playlist.length;
     totalTimeEl.textContent = formatTime(CLIP_DURATION);
     currentTimeEl.textContent = "0:00";
@@ -700,7 +738,24 @@ body {
         return `${minutes}:${secs.toString().padStart(2,'0')}`;
     }
     
-    
+    function prevTrack() {
+        currentTrackIndex =
+            (currentTrackIndex - 1 + playlist.length) % playlist.length;
+        updateSongDisplay();
+    }
+
+    function togglePlayPause() {
+        if (audioPlayer.paused) {
+            audioPlayer.play();
+            playPauseBtn.textContent = "⏸";
+        } else {
+            audioPlayer.pause();
+            playPauseBtn.textContent = "▶";
+        }
+    }
+    prevBtn.addEventListener("click", prevTrack);
+    nextBtn.addEventListener("click", nextTrack);
+    playPauseBtn.addEventListener("click", togglePlayPause);
     function updateSongDisplay() {
     
         const track = playlist[currentTrackIndex];
@@ -725,6 +780,7 @@ body {
             }
     
             audioPlayer.play();
+            playPauseBtn.textContent = "⏸";
     
         }, { once: true });
     
